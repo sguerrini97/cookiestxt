@@ -37,16 +37,16 @@ func handle_firefox(db_path *string, domain *string, output io.Writer) int {
 
 	query := `
     SELECT
-		  host,
-			CASE SUBSTR(host, 1, 1) = '.' WHEN 0 THEN 'FALSE' ELSE 'TRUE' END,
-			path,
-			CASE isSecure WHEN 0 THEN 'FALSE' ELSE 'TRUE' END,
-			expiry,
-			name,
-			value
-		FROM
-		  moz_cookies
-	`
+      host,
+      CASE SUBSTR(host, 1, 1) = '.' WHEN 0 THEN 'FALSE' ELSE 'TRUE' END,
+      path,
+      CASE isSecure WHEN 0 THEN 'FALSE' ELSE 'TRUE' END,
+      expiry,
+      name,
+      value
+    FROM
+      moz_cookies
+  `
 
 	var rows *sql.Rows
 	if domain != nil && *domain != "" {
