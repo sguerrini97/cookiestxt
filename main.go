@@ -74,7 +74,7 @@ func handle_firefox(db_path *string, domain *string, output io.Writer) int {
 		if err != nil {
 			log.Printf("error reading row: %v", err)
 		}
-		fmt.Fprintf(output, "%s %s %s %s %s %s %s\n", host, includeSubdomains, path, isSecure, expiry, name, value)
+		fmt.Fprintf(output, "%s\t%s\t%s\t%s\t%s\t%s\t%s\n", host, includeSubdomains, path, isSecure, expiry, name, value)
 		count += 1
 	}
 	return count
@@ -85,6 +85,7 @@ func main() {
 	browser := flag.String("browser", "", "browser, one of: firefox")
 	domain := flag.String("domain", "", "domain filter (ends with)")
 	output_path := flag.String("output", "cookies.txt", "output path")
+	no_header := flag.Bool("no-header", false, "do not add header to the output file")
 	flag.Parse()
 
 	db_file, err := os.Stat(*db_path)
@@ -106,6 +107,11 @@ func main() {
 		log.Fatalf("failed to create %s: %v", *output_path, err)
 	}
 	defer output_file.Close()
+
+	// Header
+	if !*no_header {
+		fmt.Fprintln(output_file, "# Netscape HTTP Cookie File")
+	}
 
 	var cookies int
 
